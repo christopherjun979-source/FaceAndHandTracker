@@ -1,35 +1,39 @@
 # Parkinson Face & Hand Tracker
 
-A website that tracks your face and hands in 3D using your webcam. It is built with HTML, CSS, and JavaScript using MediaPipe. The overall goal is for that it may help studying the small hand and face movements caused by Parkinson's disease. You do not need any special equipment to use it.
+A web-based dashboard that tracks your facial features and hands in real-time using a standard webcam. Built using HTML, CSS, and vanilla JavaScript powered by MediaPipe Holistic, this tool is designed to assist in studying the micro-movements, tremors, and rigidity associated with Parkinson's disease. No specialized hardware or depth sensors are required.
 
 ## Live Demo
-Try it directly in your browser:
+Try the live application directly in your browser:  
 **https://christopherjun979-source.github.io/ParkinsonHandTrack/**
 
-## Features
+---
 
-* **Mirrored Video Box:** The camera view acts like a normal mirror, making it natural and easy to use. The video box sits neatly in the center without blocking any data.
-* **On/Off Switches (Control Panel):** You can use the checkboxes at the top to turn tracking on or off for specific parts of the face or individual fingers. Turning a part off instantly hides its data box to keep the screen clean.
-* **Two Hand Tracking (Panels A & B):** Tracks both hands at the same time. It measures the X, Y, and Z positions for 21 points on each hand. Each finger has its own color:
-  * **Wrist Base:** red
-  * **Thumb:** orange
-  * **Index Finger:** yellow
-  * **Middle Finger:** green
-  * **Ring Finger:** blue
-  * **Pinky Finger:** purple
-* **Face Tracking:** Tracks important parts of the face to watch for movements or shaking:
-  * **Left Eye:** cyan
-  * **Right Eye:** purple
-  * **Lips:** red
-* **FPS Counter:** A live speed tracker shows how many frames per second (FPS) the website is processing to make sure the video is smooth.
-* **(X, Y, Z) Coordinates:** The numbers show the position of your hand and face as a percentage of the screen size, rather than measuring in inches or centimeters.
+## Dashboard Features
+
+* **Balanced Center-Video Layout:** The video feed is locked to a non-distorted, standard 16:9 aspect ratio and centered on the screen. The feed is mirrored horizontally to feel natural to the user.
+* **Gear Configuration Menu (⚙️):** Located discreetly in the top-right corner of the interface, clicking the gray gear icon toggles a floating, draggable **Modules Selection** panel. This panel allows you to selectively toggle data tracking loops on or off to optimize performance and screen space.
+* **Dual-Hand Tracking (Stream Panels A & B):** Pinpoints and separates data for both hands simultaneously across 21 unique skeletal landmarks. To ensure instant data tracking readability, each finger cluster is color-coded:
+  * **Wrist Base:** Red
+  * **Thumb:** Orange
+  * **Index Finger:** Yellow
+  * **Middle Finger:** Green
+  * **Ring Finger:** Blue
+  * **Pinky Finger:** Purple
+* **Wide Facial Coordinates Panel:** Positioned in a wide horizontal block directly beneath the video layout to prevent screen scrolling. It monitors critical tremor indicator zones:
+  * **Left Eye:** Cyan
+  * **Right Eye:** Purple
+  * **Lips:** Red
+* **Performance Optimization:** Features a lightweight processing loop designed to maintain high frame rates even when handling dual hands. A live **FPS Counter** is overlaid directly onto the video feed to monitor real-time tracking efficiency.
+* **Normalized Data Output:** Coordinates are rendered as precise relative percentages of the viewport canvas size rather than localized physical units, allowing for uniform data exporting.
+
+---
 
 ## How to Use
 
-1. Click the live demo link in your web browser.
-2. Click "Allow" when the browser asks to use your camera.
-3. Hold up your hands and face to the camera to see the tracking numbers update live.
-4. Use the checkboxes at the top to hide or show any data you want.
+1. Launch the application via the **Live Demo** link.
+2. Grant camera permissions when prompted by your web browser.
+3. Align your face and hands within the bounds of the central video container.
+4. Click the **Gray Gear Icon (⚙️)** in the top right to open or hide the modules selection panel and customize which data sets are actively rendered.
 
 ---
-*Note: This project is a work-in-progress and is updated often.*
+*Note: This project is a work-in-progress and is actively updated.*
