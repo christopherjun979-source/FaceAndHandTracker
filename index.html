@@ -96,7 +96,6 @@
             width: 640px;
         }
 
-        /* Clean non-overlapping rigid video container container block */
         #container {
             position: relative;
             width: 640px;
@@ -105,7 +104,6 @@
             overflow: hidden;
         }
 
-        /* Mirrored layout view assignment */
         video,
         canvas {
             position: absolute;
@@ -120,7 +118,7 @@
             font-family: Arial, sans-serif;
             position: absolute;
             top: 10px;
-            right: 10px; /* Shifted clear of left mirroring profiles */
+            right: 10px;
             z-index: 10;
             background: rgba(18, 18, 20, 0.85);
             color: #00ff00;
@@ -307,7 +305,6 @@
         const faceData = document.getElementById('face-data');
         const fpsCounter = document.getElementById('fps-counter');
 
-        // Target mapping profiles split per column panel requirements
         const checkboxes = {
             leftEye: document.getElementById('show-lefteye'),
             rightEye: document.getElementById('show-righteye'),
@@ -372,7 +369,6 @@
             }
         }
 
-        // Updated connection tracking parsing toggles for isolated panels
         function drawCustomConnections(ctx, landmarks, connections, color, trackingKey, panelKey) {
             if (!landmarks || !checkboxes[panelKey][trackingKey].checked) return;
             for (const connection of connections) {
@@ -469,13 +465,11 @@
             updateFPS();
             canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
-            // Canvas transform mirroring setup directly handled via context manipulation
             canvasCtx.save();
             canvasCtx.translate(canvasElement.width, 0);
             canvasCtx.scale(-1, 1);
             canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
 
-            // Face detection parsing checks
             if (results.faceLandmarks) {
                 drawFaceLayoutPoints(canvasCtx, results.faceLandmarks, leftEyeLayout, '#22d3ee', checkboxes.leftEye.checked);
                 drawFaceLayoutPoints(canvasCtx, results.faceLandmarks, rightEyeLayout, '#c084fc', checkboxes.rightEye.checked);
@@ -494,7 +488,6 @@
                 faceData.innerHTML = `<div class="status-msg" style="grid-column: span 3;">NO FACE DETECTED</div>`;
             }
 
-            // Hand Pipeline tracking sorting architecture
             let currentFrameHands = [];
             if (results.leftHandLandmarks) currentFrameHands.push(results.leftHandLandmarks);
             if (results.rightHandLandmarks) currentFrameHands.push(results.rightHandLandmarks);
@@ -544,7 +537,6 @@
                 }
             }
 
-            // Render Stream Panel A Skeletons matching specific toggle row criteria
             if (assignedPanelA) {
                 drawCustomConnections(canvasCtx, assignedPanelA, [[0, 1], [1, 2], [2, 3], [3, 4]], '#f97316', 'thumb', 'panelA');
                 drawCustomConnections(canvasCtx, assignedPanelA, [[0, 5], [5, 6], [6, 7], [7, 8]], '#eab308', 'index', 'panelA');
@@ -557,7 +549,6 @@
                 leftData.innerHTML = `<div class="hand-header">Stream Panel A</div><div class="status-msg">NO HAND DETECTED</div>`;
             }
 
-            // Render Stream Panel B Skeletons matching specific toggle row criteria
             if (assignedPanelB) {
                 drawCustomConnections(canvasCtx, assignedPanelB, [[0, 1], [1, 2], [2, 3], [3, 4]], '#f97316', 'thumb', 'panelB');
                 drawCustomConnections(canvasCtx, assignedPanelB, [[0, 5], [5, 6], [6, 7], [7, 8]], '#eab308', 'index', 'panelB');
