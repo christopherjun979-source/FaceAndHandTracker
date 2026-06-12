@@ -11,16 +11,16 @@ Try it directly in your browser:
 * **Mirrored Video Box:** The camera view acts like a normal mirror, making it natural and easy to use. The video box sits neatly in the center without blocking any data.
 * **On/Off Switches (Control Panel):** You can use the checkboxes at the top to turn tracking on or off for specific parts of the face or individual fingers. Turning a part off instantly hides its data box to keep the screen clean.
 * **Two Hand Tracking (Panels A & B):** Tracks both hands at the same time. It measures the X, Y, and Z positions for 21 points on each hand. Each finger has its own color:
-  * **Wrist Base:** Red
-  * **Thumb:** Orange
-  * **Index Finger:** Yellow
-  * **Middle Finger:** Green
-  * **Ring Finger:** Blue
-  * **Pinky Finger:** Purple
+  * **Wrist Base:** red
+  * **Thumb:** orange
+  * **Index Finger:** yellow
+  * **Middle Finger:** green
+  * **Ring Finger:** blue
+  * **Pinky Finger:** purple
 * **Face Tracking:** Tracks important parts of the face to watch for movements or shaking:
-  * **Left Eye:** Cyan
-  * **Right Eye:** Purple
-  * **Lips:** Red
+  * **Left Eye:** cyan
+  * **Right Eye:** purple
+  * **Lips:** red
 * **FPS Counter:** A live speed tracker shows how many frames per second (FPS) the website is processing to make sure the video is smooth.
 
 ## How to Use
