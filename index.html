@@ -29,17 +29,25 @@
         #app-layout {
             display: flex;
             justify-content: center;
-            align-items: stretch;
+            align-items: flex-start;
             gap: 15px;
             max-width: 1600px;
             margin: 0 auto;
+        }
+
+        /* Center structure holding video + bottom face telemetry */
+        #center-block {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex-shrink: 0;
+            width: 640px;
         }
 
         #container {
             position: relative;
             width: 640px;
             height: 480px;
-            flex-shrink: 0;
             background: #000;
         }
 
@@ -66,23 +74,14 @@
             pointer-events: none;
         }
 
+        /* Hand columns maximized with no scrollbars */
         .hand-column {
             flex: 1;
             background: #121214;
             padding: 12px;
-            height: 520px;
             box-sizing: border-box;
-            overflow-y: auto;
             display: flex;
             flex-direction: column;
-        }
-
-        .hand-column::-webkit-scrollbar {
-            width: 6px;
-        }
-        .hand-column::-webkit-scrollbar-thumb {
-            background: #27272a;
-            border-radius: 3px;
         }
 
         .hand-header {
@@ -101,14 +100,29 @@
             font-size: 13px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin: auto;
+            margin: 20px auto;
             text-align: center;
         }
 
         .data-grid {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
+        }
+
+        /* Face Telemetry Panel directly below screen */
+        #face-telemetry-panel {
+            background: #121214;
+            padding: 12px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .face-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
         }
 
         .finger-group {
@@ -123,7 +137,10 @@
         .finger-group[data-group="Middle Finger"] { border: 1px solid #22c55e; }
         .finger-group[data-group="Ring Finger"] { border: 1px solid #3b82f6; }
         .finger-group[data-group="Pinky Finger"] { border: 1px solid #a855f7; }
-        .finger-group[data-group="Facial Module"] { border: 1px solid #a1a1aa; }
+        
+        .finger-group[data-group="Face-LeftEye"] { border: 1px solid #22d3ee; }
+        .finger-group[data-group="Face-RightEye"] { border: 1px solid #c084fc; }
+        .finger-group[data-group="Face-Lips"] { border: 1px solid #ef4444; }
 
         .finger-title {
             font-size: 10px;
@@ -140,7 +157,10 @@
         .finger-group[data-group="Middle Finger"] .finger-title { color: #22c55e; }
         .finger-group[data-group="Ring Finger"] .finger-title { color: #3b82f6; }
         .finger-group[data-group="Pinky Finger"] .finger-title { color: #a855f7; }
-        .finger-group[data-group="Facial Module"] .finger-title { color: #e4e4e7; }
+        
+        .finger-group[data-group="Face-LeftEye"] .finger-title { color: #22d3ee; }
+        .finger-group[data-group="Face-RightEye"] .finger-title { color: #c084fc; }
+        .finger-group[data-group="Face-Lips"] .finger-title { color: #ef4444; }
 
         .coord-line {
             font-family: monospace;
@@ -167,10 +187,19 @@
             <div id="left-data" class="status-msg">NO DATA DETECTED</div>
         </div>
 
-        <div id="container">
-            <div id="fps-counter">FPS: --</div>
-            <video id="webcam" width="640" height="480" autoplay playsinline></video>
-            <canvas id="output_canvas" width="640" height="480"></canvas>
+        <div id="center-block">
+            <div id="container">
+                <div id="fps-counter">FPS: --</div>
+                <video id="webcam" width="640" height="480" autoplay playsinline></video>
+                <canvas id="output_canvas" width="640" height="480"></canvas>
+            </div>
+
+            <div id="face-telemetry-panel">
+                <div class="hand-header">Facial Coordinate Telemetry</div>
+                <div id="face-data" class="face-grid">
+                    <div class="status-msg" style="grid-column: span 3;">NO FACE DETECTED</div>
+                </div>
+            </div>
         </div>
 
         <div class="hand-column" id="right-column">
@@ -185,6 +214,7 @@
 
         const leftData = document.getElementById('left-data');
         const rightData = document.getElementById('right-data');
+        const faceData = document.getElementById('face-data');
         const fpsCounter = document.getElementById('fps-counter');
 
         const landmarkGroups = [
@@ -196,7 +226,6 @@
             { name: "Pinky Finger", indices: [17, 18, 19, 20], color: '#a855f7' }
         ];
 
-        // Specific isolated landmarks mapped directly to names for easy understanding
         const leftEyeLayout = [
             { id: 159, label: "Top" },
             { id: 145, label: "Bottom" }
@@ -273,8 +302,8 @@
             });
         }
 
-        function generateHandHTML(landmarks, title) {
-            let htmlContent = `<div class="data-grid">`;
+        function generateHandHTML(landmarks, panelTitle) {
+            let htmlContent = `<div class="hand-header">${panelTitle}</div><div class="data-grid">`;
             landmarkGroups.forEach(group => {
                 htmlContent += `<div class="finger-group" data-group="${group.name}">`;
                 htmlContent += `<div class="finger-title">${group.name}</div>`;
@@ -292,9 +321,9 @@
             return htmlContent;
         }
 
-        function generateFaceHTML(faceLandmarks, layout, segmentTitle) {
+        function generateFaceHTML(faceLandmarks, layout, segmentTitle, dataGroupType) {
             if (!faceLandmarks) return '';
-            let htmlContent = `<div class="finger-group" data-group="Facial Module">`;
+            let htmlContent = `<div class="finger-group" data-group="${dataGroupType}">`;
             htmlContent += `<div class="finger-title">${segmentTitle}</div>`;
             layout.forEach(item => {
                 const pt = faceLandmarks[item.id];
@@ -319,14 +348,23 @@
             canvasCtx.scale(-1, 1);
             canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
 
-            // 1. Plot Isolated Custom Facial Feature Points
+            // 1. Render Face Dot Overlays
             if (results.faceLandmarks) {
-                drawFaceLayoutPoints(canvasCtx, results.faceLandmarks, leftEyeLayout, '#3b82f6');
-                drawFaceLayoutPoints(canvasCtx, results.faceLandmarks, rightEyeLayout, '#3b82f6');
+                drawFaceLayoutPoints(canvasCtx, results.faceLandmarks, leftEyeLayout, '#22d3ee');
+                drawFaceLayoutPoints(canvasCtx, results.faceLandmarks, rightEyeLayout, '#c084fc');
                 drawFaceLayoutPoints(canvasCtx, results.faceLandmarks, lipsLayout, '#ef4444');
+
+                // Render Under-Screen Face Modules
+                let faceHTML = "";
+                faceHTML += generateFaceHTML(results.faceLandmarks, leftEyeLayout, "Your Left Eye (Cyan)", "Face-LeftEye");
+                faceHTML += generateFaceHTML(results.faceLandmarks, rightEyeLayout, "Your Right Eye (Purple)", "Face-RightEye");
+                faceHTML += generateFaceHTML(results.faceLandmarks, lipsLayout, "Lips Coordinates (Red)", "Face-Lips");
+                faceData.innerHTML = faceHTML;
+            } else {
+                faceData.innerHTML = `<div class="status-msg" style="grid-column: span 3;">NO FACE DETECTED</div>`;
             }
 
-            // 2. Hand Telemetry Assignment
+            // 2. Hand Sorting & Mapping
             let currentFrameHands = [];
             if (results.leftHandLandmarks) currentFrameHands.push(results.leftHandLandmarks);
             if (results.rightHandLandmarks) currentFrameHands.push(results.rightHandLandmarks);
@@ -376,11 +414,7 @@
                 }
             }
 
-            // --- RENDER COLUMN A ---
-            let panelA_HTML = `<div class="hand-header">Stream Panel A</div><div class="data-grid">`;
-            if (results.faceLandmarks) {
-                panelA_HTML += generateFaceHTML(results.faceLandmarks, leftEyeLayout, "Left Eye Coordinates");
-            }
+            // Render Hand Panel A
             if (assignedPanelA) {
                 drawCustomConnections(canvasCtx, assignedPanelA, [[0, 1], [1, 2], [2, 3], [3, 4]], '#f97316');
                 drawCustomConnections(canvasCtx, assignedPanelA, [[0, 5], [5, 6], [6, 7], [7, 8]], '#eab308');
@@ -388,34 +422,23 @@
                 drawCustomConnections(canvasCtx, assignedPanelA, [[13, 14], [14, 15], [15, 16], [0, 13]], '#3b82f6');
                 drawCustomConnections(canvasCtx, assignedPanelA, [[17, 18], [18, 19], [19, 20], [0, 17]], '#a855f7');
                 drawHandPoints(canvasCtx, assignedPanelA);
-                panelA_HTML += generateHandHTML(assignedPanelA, "Stream Panel A");
+                leftData.innerHTML = generateHandHTML(assignedPanelA, "Stream Panel A");
             } else {
-                panelA_HTML += `<div class="status-msg" style="padding:20px 0;">NO HAND DETECTED</div>`;
+                leftData.innerHTML = `<div class="hand-header">Stream Panel A</div><div class="status-msg">NO HAND DETECTED</div>`;
             }
-            panelA_HTML += `</div>`;
-            leftData.className = "";
-            leftData.innerHTML = panelA_HTML;
 
-            // --- RENDER COLUMN B ---
-            let panelB_HTML = `<div class="hand-header">Stream Panel B</div><div class="data-grid">`;
-            if (results.faceLandmarks) {
-                panelB_HTML += generateFaceHTML(results.faceLandmarks, rightEyeLayout, "Right Eye Coordinates");
-                panelB_HTML += generateFaceHTML(results.faceLandmarks, lipsLayout, "Lips Coordinates");
-            }
+            // Render Hand Panel B
             if (assignedPanelB) {
                 drawCustomConnections(canvasCtx, assignedPanelB, [[0, 1], [1, 2], [2, 3], [3, 4]], '#f97316');
-                drawCustomConnections(canvasCtx, assignedPanelB, [[0, 5], [5, 6], [7, 8]], '#eab308');
+                drawCustomConnections(canvasCtx, assignedPanelB, [[0, 5], [5, 6], [6, 7], [7, 8]], '#eab308');
                 drawCustomConnections(canvasCtx, assignedPanelB, [[9, 10], [10, 11], [11, 12], [0, 9]], '#22c55e');
                 drawCustomConnections(canvasCtx, assignedPanelB, [[13, 14], [14, 15], [15, 16], [0, 13]], '#3b82f6');
                 drawCustomConnections(canvasCtx, assignedPanelB, [[17, 18], [18, 19], [19, 20], [0, 17]], '#a855f7');
                 drawHandPoints(canvasCtx, assignedPanelB);
-                panelB_HTML += generateHandHTML(assignedPanelB, "Stream Panel B");
+                rightData.innerHTML = generateHandHTML(assignedPanelB, "Stream Panel B");
             } else {
-                panelB_HTML += `<div class="status-msg" style="padding:20px 0;">NO HAND DETECTED</div>`;
+                rightData.innerHTML = `<div class="hand-header">Stream Panel B</div><div class="status-msg">NO HAND DETECTED</div>`;
             }
-            panelB_HTML += `</div>`;
-            rightData.className = "";
-            rightData.innerHTML = panelB_HTML;
 
             canvasCtx.restore();
         }
