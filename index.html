@@ -73,7 +73,6 @@
             border-radius: 0px;
         }
 
-        /* Maximized Center Layout */
         #app-layout {
             display: flex;
             flex-direction: column;
@@ -83,7 +82,6 @@
             margin: 0 auto;
         }
 
-        /* Maximized Camera Container (Upgraded to 1280x720 HD aspect ratio) */
         #container {
             position: relative;
             width: 1280px;
@@ -118,101 +116,86 @@
             pointer-events: none;
         }
 
-        /* Horizontal Output Block Configuration */
-        .data-panel-horizontal {
-            font-family: Arial, sans-serif;
-            width: 1280px;
+        /* Redesigned to look exactly like the control panel layout */
+        .slim-data-bar {
             background: #121214;
-            padding: 15px;
+            padding: 12px;
+            width: 1280px;
             box-sizing: border-box;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            gap: 15px;
         }
 
-        .hand-header {
-            font-family: Arial, sans-serif;
-            font-size: 15px;
-            color: #ffffff;
+        .panel-label {
+            font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
+            color: #ffffff;
             letter-spacing: 1px;
-            padding-bottom: 5px;
-            margin-bottom: 10px;
+            min-width: 160px;
+            flex-shrink: 0;
         }
 
-        .status-msg {
+        .horizontal-content-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .status-msg-inline {
             font-family: Arial, sans-serif;
             color: #52525b;
-            font-size: 13px;
+            font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin: 10px auto;
-            text-align: center;
         }
 
-        /* Wide horizontal flex grid for data nodes */
-        .data-grid-horizontal {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 10px;
-        }
-
-        .face-grid-horizontal {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-
-        .finger-group {
+        .finger-pill {
             background: #18181b;
-            border-radius: 0px;
-            padding: 8px;
-        }
-
-        .finger-group[data-group="Wrist Base"] { border: 1px solid #ef4444; }
-        .finger-group[data-group="Thumb"] { border: 1px solid #f97316; }
-        .finger-group[data-group="Index Finger"] { border: 1px solid #eab308; }
-        .finger-group[data-group="Middle Finger"] { border: 1px solid #22c55e; }
-        .finger-group[data-group="Ring Finger"] { border: 1px solid #3b82f6; }
-        .finger-group[data-group="Pinky Finger"] { border: 1px solid #a855f7; }
-        
-        .finger-group[data-group="Face-LeftEye"] { border: 1px solid #22d3ee; }
-        .finger-group[data-group="Face-RightEye"] { border: 1px solid #c084fc; }
-        .finger-group[data-group="Face-Lips"] { border: 1px solid #ef4444; }
-
-        .finger-title {
-            font-family: Arial, sans-serif;
-            font-size: 10px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid #27272a;
-        }
-
-        .finger-group[data-group="Wrist Base"] .finger-title { color: #ef4444; }
-        .finger-group[data-group="Thumb"] .finger-title { color: #f97316; }
-        .finger-group[data-group="Index Finger"] .finger-title { color: #eab308; }
-        .finger-group[data-group="Middle Finger"] .finger-title { color: #22c55e; }
-        .finger-group[data-group="Ring Finger"] .finger-title { color: #3b82f6; }
-        .finger-group[data-group="Pinky Finger"] .finger-title { color: #a855f7; }
-        
-        .finger-group[data-group="Face-LeftEye"] .finger-title { color: #22d3ee; }
-        .finger-group[data-group="Face-RightEye"] .finger-title { color: #c084fc; }
-        .finger-group[data-group="Face-Lips"] .finger-title { color: #ef4444; }
-
-        .coord-line {
-            font-family: Arial, sans-serif;
-            font-size: 10px;
-            line-height: 1.4;
-            color: #a1a1aa;
+            padding: 4px 8px;
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
         }
 
-        .coord-values {
+        .finger-pill[data-group="Wrist Base"] { border: 1px solid #ef4444; }
+        .finger-pill[data-group="Thumb"] { border: 1px solid #f97316; }
+        .finger-pill[data-group="Index Finger"] { border: 1px solid #eab308; }
+        .finger-pill[data-group="Middle Finger"] { border: 1px solid #22c55e; }
+        .finger-pill[data-group="Ring Finger"] { border: 1px solid #3b82f6; }
+        .finger-pill[data-group="Pinky Finger"] { border: 1px solid #a855f7; }
+        
+        .finger-pill[data-group="Face-LeftEye"] { border: 1px solid #22d3ee; }
+        .finger-pill[data-group="Face-RightEye"] { border: 1px solid #c084fc; }
+        .finger-pill[data-group="Face-Lips"] { border: 1px solid #ef4444; }
+
+        .pill-title {
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .finger-pill[data-group="Wrist Base"] .pill-title { color: #ef4444; }
+        .finger-pill[data-group="Thumb"] .pill-title { color: #f97316; }
+        .finger-pill[data-group="Index Finger"] .pill-title { color: #eab308; }
+        .finger-pill[data-group="Middle Finger"] .pill-title { color: #22c55e; }
+        .finger-pill[data-group="Ring Finger"] .pill-title { color: #3b82f6; }
+        .finger-pill[data-group="Pinky Finger"] .pill-title { color: #a855f7; }
+        
+        .finger-pill[data-group="Face-LeftEye"] .pill-title { color: #22d3ee; }
+        .finger-pill[data-group="Face-RightEye"] .pill-title { color: #c084fc; }
+        .finger-pill[data-group="Face-Lips"] .pill-title { color: #ef4444; }
+
+        .pill-coords {
             color: #fafafa;
+            font-family: monospace;
             font-weight: bold;
+            letter-spacing: -0.3px;
         }
     </style>
 </head>
@@ -257,24 +240,24 @@
             <canvas id="output_canvas" width="1280" height="720"></canvas>
         </div>
 
-        <div class="data-panel-horizontal" id="panel-a-container">
-            <div class="hand-header">Stream Panel A</div>
-            <div id="left-data">
-                <div class="status-msg">NO HAND DETECTED</div>
+        <div class="slim-data-bar" id="panel-a-container">
+            <div class="panel-label">Stream Panel A:</div>
+            <div id="left-data" class="horizontal-content-wrapper">
+                <div class="status-msg-inline">NO HAND DETECTED</div>
             </div>
         </div>
 
-        <div class="data-panel-horizontal" id="panel-b-container">
-            <div class="hand-header">Stream Panel B</div>
-            <div id="right-data">
-                <div class="status-msg">NO HAND DETECTED</div>
+        <div class="slim-data-bar" id="panel-b-container">
+            <div class="panel-label">Stream Panel B:</div>
+            <div id="right-data" class="horizontal-content-wrapper">
+                <div class="status-msg-inline">NO HAND DETECTED</div>
             </div>
         </div>
 
-        <div class="data-panel-horizontal" id="face-tracking-panel">
-            <div class="hand-header">Facial Coordinates</div>
-            <div id="face-data" class="face-grid-horizontal">
-                <div class="status-msg" style="grid-column: span 3;">NO FACE DETECTED</div>
+        <div class="slim-data-bar" id="face-tracking-panel">
+            <div class="panel-label">Facial Coordinates:</div>
+            <div id="face-data" class="horizontal-content-wrapper">
+                <div class="status-msg-inline">NO FACE DETECTED</div>
             </div>
         </div>
     </div>
@@ -399,30 +382,28 @@
         }
 
         function generateHandHTML(landmarks, panelKey) {
-            let htmlContent = `<div class="data-grid-horizontal">`;
+            let htmlContent = "";
             let elementsLogged = 0;
             
             landmarkGroups.forEach(group => {
                 if (checkboxes[panelKey][group.key].checked) {
                     elementsLogged++;
-                    htmlContent += `<div class="finger-group" data-group="${group.name}">`;
-                    htmlContent += `<div class="finger-title">${group.name}</div>`;
+                    htmlContent += `<div class="finger-pill" data-group="${group.name}">`;
+                    htmlContent += `<span class="pill-title">${group.name}</span>`;
+                    
+                    let coordsStrings = [];
                     group.indices.forEach(i => {
                         const pt = landmarks[i];
-                        htmlContent += `
-                        <div class="coord-line">
-                            <span>P${i}:</span>
-                            <span class="coord-values">X:${pt.x.toFixed(2)} Y:${pt.y.toFixed(2)} Z:${pt.z.toFixed(2)}</span>
-                        </div>`;
+                        coordsStrings.push(`P${i}[${pt.x.toFixed(2)},${pt.y.toFixed(2)}]`);
                     });
+                    
+                    htmlContent += `<span class="pill-coords">${coordsStrings.join(' ')}</span>`;
                     htmlContent += `</div>`;
                 }
             });
             
             if(elementsLogged === 0) {
-                htmlContent = `<div class="status-msg">ALL MODULES MUTED</div>`;
-            } else {
-                htmlContent += `</div>`;
+                htmlContent = `<div class="status-msg-inline">ALL MODULES MUTED</div>`;
             }
             
             return htmlContent;
@@ -430,18 +411,18 @@
 
         function generateFaceHTML(faceLandmarks, layout, segmentTitle, dataGroupType, enabled) {
             if (!faceLandmarks || !enabled) return '';
-            let htmlContent = `<div class="finger-group" data-group="${dataGroupType}">`;
-            htmlContent += `<div class="finger-title">${segmentTitle}</div>`;
+            let htmlContent = `<div class="finger-pill" data-group="${dataGroupType}">`;
+            htmlContent += `<span class="pill-title">${segmentTitle}</span>`;
+            
+            let coordsStrings = [];
             layout.forEach(item => {
                 const pt = faceLandmarks[item.id];
                 if (pt) {
-                    htmlContent += `
-                    <div class="coord-line">
-                        <span>${item.label}:</span>
-                        <span class="coord-values">X:${pt.x.toFixed(2)} Y:${pt.y.toFixed(2)} Z:${pt.z.toFixed(2)}</span>
-                    </div>`;
+                    coordsStrings.push(`${item.label}[${pt.x.toFixed(2)},${pt.y.toFixed(2)}]`);
                 }
             });
+            
+            htmlContent += `<span class="pill-coords">${coordsStrings.join(' ')}</span>`;
             htmlContent += `</div>`;
             return htmlContent;
         }
@@ -461,16 +442,16 @@
                 drawFaceLayoutPoints(canvasCtx, results.faceLandmarks, lipsLayout, '#ef4444', checkboxes.lips.checked);
 
                 let faceHTML = "";
-                faceHTML += generateFaceHTML(results.faceLandmarks, leftEyeLayout, "Your Left Eye (Cyan)", "Face-LeftEye", checkboxes.leftEye.checked);
-                faceHTML += generateFaceHTML(results.faceLandmarks, rightEyeLayout, "Your Right Eye (Purple)", "Face-RightEye", checkboxes.rightEye.checked);
-                faceHTML += generateFaceHTML(results.faceLandmarks, lipsLayout, "Lips Coordinates (Red)", "Face-Lips", checkboxes.lips.checked);
+                faceHTML += generateFaceHTML(results.faceLandmarks, leftEyeLayout, "Left Eye", "Face-LeftEye", checkboxes.leftEye.checked);
+                faceHTML += generateFaceHTML(results.faceLandmarks, rightEyeLayout, "Right Eye", "Face-RightEye", checkboxes.rightEye.checked);
+                faceHTML += generateFaceHTML(results.faceLandmarks, lipsLayout, "Lips", "Face-Lips", checkboxes.lips.checked);
                 
                 if(!checkboxes.leftEye.checked && !checkboxes.rightEye.checked && !checkboxes.lips.checked) {
-                     faceHTML = `<div class="status-msg" style="grid-column: span 3;">ALL FACIAL MODULES MUTED</div>`;
+                     faceHTML = `<div class="status-msg-inline">ALL FACIAL MODULES MUTED</div>`;
                 }
                 faceData.innerHTML = faceHTML;
             } else {
-                faceData.innerHTML = `<div class="status-msg" style="grid-column: span 3;">NO FACE DETECTED</div>`;
+                faceData.innerHTML = `<div class="status-msg-inline">NO FACE DETECTED</div>`;
             }
 
             let currentFrameHands = [];
@@ -531,7 +512,7 @@
                 drawHandPoints(canvasCtx, assignedPanelA, 'panelA');
                 leftData.innerHTML = generateHandHTML(assignedPanelA, 'panelA');
             } else {
-                leftData.innerHTML = `<div class="status-msg">NO HAND DETECTED</div>`;
+                leftData.innerHTML = `<div class="status-msg-inline">NO HAND DETECTED</div>`;
             }
 
             if (assignedPanelB) {
@@ -543,7 +524,7 @@
                 drawHandPoints(canvasCtx, assignedPanelB, 'panelB');
                 rightData.innerHTML = generateHandHTML(assignedPanelB, 'panelB');
             } else {
-                rightData.innerHTML = `<div class="status-msg">NO HAND DETECTED</div>`;
+                rightData.innerHTML = `<div class="status-msg-inline">NO HAND DETECTED</div>`;
             }
 
             canvasCtx.restore();
