@@ -29,6 +29,6 @@ Try the live application directly in your browser:
 1. Launch the application via the **Live Demo** link.
 2. Grant camera permissions when prompted by your web browser.
 3. Align your face and hands within the bounds of the central video container.
-4. Click the **Gray Gear Icon (⚙️)** in the top right to open or hide the modules selection panel and customize which data sets are actively rendered.
+4. Click the Grey Gear Icon(⚙️) in the top right to open or hide the modules selection panel and customize which data sets are actively rendered.
 
 *Note: This project is a work-in-progress and is actively updated.*
