@@ -27,7 +27,6 @@
             color: #a1a1aa;
         }
 
-        /* Rigid Control Panel Style */
         #control-panel {
             background: #121214;
             padding: 12px;
@@ -36,13 +35,23 @@
             margin-left: auto;
             margin-right: auto;
             box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .control-section {
+        .control-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 12px;
             align-items: center;
+            border-bottom: 1px solid #27272a;
+            padding-bottom: 8px;
+        }
+
+        .control-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
         }
 
         .control-label-group {
@@ -51,7 +60,7 @@
             text-transform: uppercase;
             color: #a1a1aa;
             letter-spacing: 1px;
-            margin-right: 5px;
+            min-width: 160px;
         }
 
         .toggle-item {
@@ -67,7 +76,7 @@
             cursor: pointer;
             width: 14px;
             height: 14px;
-            border-radius: 0px; /* Force rigid appearance where browser allows */
+            border-radius: 0px;
         }
 
         #app-layout {
@@ -87,27 +96,31 @@
             width: 640px;
         }
 
-        // ... Existing Layout Styles Remained Intact ...
+        /* Clean non-overlapping rigid video container container block */
         #container {
             position: relative;
             width: 640px;
             height: 480px;
             background: #000;
+            overflow: hidden;
         }
 
+        /* Mirrored layout view assignment */
         video,
         canvas {
             position: absolute;
             left: 0;
             top: 0;
-            transform: rotateY(180deg);
+            width: 640px;
+            height: 480px;
+            transform: scaleX(-1);
         }
 
         #fps-counter {
             font-family: Arial, sans-serif;
             position: absolute;
             top: 10px;
-            left: 10px;
+            right: 10px; /* Shifted clear of left mirroring profiles */
             z-index: 10;
             background: rgba(18, 18, 20, 0.85);
             color: #00ff00;
@@ -231,19 +244,31 @@
     <h2>Parkinson Face & Hand Tracker</h2>
 
     <div id="control-panel">
-        <div class="control-section">
+        <div class="control-row">
             <span class="control-label-group">Face Modules:</span>
             <label class="toggle-item" style="color: #22d3ee;"><input type="checkbox" id="show-lefteye" checked> Left Eye</label>
             <label class="toggle-item" style="color: #c084fc;"><input type="checkbox" id="show-righteye" checked> Right Eye</label>
             <label class="toggle-item" style="color: #ef4444;"><input type="checkbox" id="show-lips" checked> Lips</label>
-            
-            <span class="control-label-group" style="margin-left: 20px;">Hand Modules:</span>
-            <label class="toggle-item" style="color: #ef4444;"><input type="checkbox" id="show-wrist" checked> Wrist</label>
-            <label class="toggle-item" style="color: #f97316;"><input type="checkbox" id="show-thumb" checked> Thumb</label>
-            <label class="toggle-item" style="color: #eab308;"><input type="checkbox" id="show-index" checked> Index</label>
-            <label class="toggle-item" style="color: #22c55e;"><input type="checkbox" id="show-middle" checked> Middle</label>
-            <label class="toggle-item" style="color: #3b82f6;"><input type="checkbox" id="show-ring" checked> Ring</label>
-            <label class="toggle-item" style="color: #a855f7;"><input type="checkbox" id="show-pinky" checked> Pinky</label>
+        </div>
+        
+        <div class="control-row">
+            <span class="control-label-group">Stream Panel A Hand:</span>
+            <label class="toggle-item" style="color: #ef4444;"><input type="checkbox" id="pa-wrist" checked> Wrist</label>
+            <label class="toggle-item" style="color: #f97316;"><input type="checkbox" id="pa-thumb" checked> Thumb</label>
+            <label class="toggle-item" style="color: #eab308;"><input type="checkbox" id="pa-index" checked> Index</label>
+            <label class="toggle-item" style="color: #22c55e;"><input type="checkbox" id="pa-middle" checked> Middle</label>
+            <label class="toggle-item" style="color: #3b82f6;"><input type="checkbox" id="pa-ring" checked> Ring</label>
+            <label class="toggle-item" style="color: #a855f7;"><input type="checkbox" id="pa-pinky" checked> Pinky</label>
+        </div>
+
+        <div class="control-row">
+            <span class="control-label-group">Stream Panel B Hand:</span>
+            <label class="toggle-item" style="color: #ef4444;"><input type="checkbox" id="pb-wrist" checked> Wrist</label>
+            <label class="toggle-item" style="color: #f97316;"><input type="checkbox" id="pb-thumb" checked> Thumb</label>
+            <label class="toggle-item" style="color: #eab308;"><input type="checkbox" id="pb-index" checked> Index</label>
+            <label class="toggle-item" style="color: #22c55e;"><input type="checkbox" id="pb-middle" checked> Middle</label>
+            <label class="toggle-item" style="color: #3b82f6;"><input type="checkbox" id="pb-ring" checked> Ring</label>
+            <label class="toggle-item" style="color: #a855f7;"><input type="checkbox" id="pb-pinky" checked> Pinky</label>
         </div>
     </div>
 
@@ -282,17 +307,27 @@
         const faceData = document.getElementById('face-data');
         const fpsCounter = document.getElementById('fps-counter');
 
-        // Target state reference binds
+        // Target mapping profiles split per column panel requirements
         const checkboxes = {
             leftEye: document.getElementById('show-lefteye'),
             rightEye: document.getElementById('show-righteye'),
             lips: document.getElementById('show-lips'),
-            wrist: document.getElementById('show-wrist'),
-            thumb: document.getElementById('show-thumb'),
-            index: document.getElementById('show-index'),
-            middle: document.getElementById('show-middle'),
-            ring: document.getElementById('show-ring'),
-            pinky: document.getElementById('show-pinky')
+            panelA: {
+                wrist: document.getElementById('pa-wrist'),
+                thumb: document.getElementById('pa-thumb'),
+                index: document.getElementById('pa-index'),
+                middle: document.getElementById('pa-middle'),
+                ring: document.getElementById('pa-ring'),
+                pinky: document.getElementById('pa-pinky')
+            },
+            panelB: {
+                wrist: document.getElementById('pb-wrist'),
+                thumb: document.getElementById('pb-thumb'),
+                index: document.getElementById('pb-index'),
+                middle: document.getElementById('pb-middle'),
+                ring: document.getElementById('pb-ring'),
+                pinky: document.getElementById('pb-pinky')
+            }
         };
 
         const landmarkGroups = [
@@ -337,8 +372,9 @@
             }
         }
 
-        function drawCustomConnections(ctx, landmarks, connections, color, trackingKey) {
-            if (!landmarks || !checkboxes[trackingKey].checked) return;
+        // Updated connection tracking parsing toggles for isolated panels
+        function drawCustomConnections(ctx, landmarks, connections, color, trackingKey, panelKey) {
+            if (!landmarks || !checkboxes[panelKey][trackingKey].checked) return;
             for (const connection of connections) {
                 const first = landmarks[connection[0]];
                 const second = landmarks[connection[1]];
@@ -353,10 +389,10 @@
             }
         }
 
-        function drawHandPoints(ctx, landmarks) {
+        function drawHandPoints(ctx, landmarks, panelKey) {
             if (!landmarks) return;
             landmarkGroups.forEach(group => {
-                if (checkboxes[group.key].checked) {
+                if (checkboxes[panelKey][group.key].checked) {
                     group.indices.forEach(i => {
                         if (landmarks[i]) {
                             ctx.beginPath();
@@ -382,12 +418,12 @@
             });
         }
 
-        function generateHandHTML(landmarks, panelTitle) {
+        function generateHandHTML(landmarks, panelTitle, panelKey) {
             let htmlContent = `<div class="hand-header">${panelTitle}</div><div class="data-grid">`;
             let elementsLogged = 0;
             
             landmarkGroups.forEach(group => {
-                if (checkboxes[group.key].checked) {
+                if (checkboxes[panelKey][group.key].checked) {
                     elementsLogged++;
                     htmlContent += `<div class="finger-group" data-group="${group.name}">`;
                     htmlContent += `<div class="finger-title">${group.name}</div>`;
@@ -433,12 +469,13 @@
             updateFPS();
             canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
+            // Canvas transform mirroring setup directly handled via context manipulation
             canvasCtx.save();
             canvasCtx.translate(canvasElement.width, 0);
             canvasCtx.scale(-1, 1);
             canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
 
-            // 1. Conditional Face Layout Render
+            // Face detection parsing checks
             if (results.faceLandmarks) {
                 drawFaceLayoutPoints(canvasCtx, results.faceLandmarks, leftEyeLayout, '#22d3ee', checkboxes.leftEye.checked);
                 drawFaceLayoutPoints(canvasCtx, results.faceLandmarks, rightEyeLayout, '#c084fc', checkboxes.rightEye.checked);
@@ -457,7 +494,7 @@
                 faceData.innerHTML = `<div class="status-msg" style="grid-column: span 3;">NO FACE DETECTED</div>`;
             }
 
-            // 2. Hand Sorting & Context Pipeline Mapping
+            // Hand Pipeline tracking sorting architecture
             let currentFrameHands = [];
             if (results.leftHandLandmarks) currentFrameHands.push(results.leftHandLandmarks);
             if (results.rightHandLandmarks) currentFrameHands.push(results.rightHandLandmarks);
@@ -507,28 +544,28 @@
                 }
             }
 
-            // Render Hand Panel A Skeletons safely matching toggle profiles
+            // Render Stream Panel A Skeletons matching specific toggle row criteria
             if (assignedPanelA) {
-                drawCustomConnections(canvasCtx, assignedPanelA, [[0, 1], [1, 2], [2, 3], [3, 4]], '#f97316', 'thumb');
-                drawCustomConnections(canvasCtx, assignedPanelA, [[0, 5], [5, 6], [6, 7], [7, 8]], '#eab308', 'index');
-                drawCustomConnections(canvasCtx, assignedPanelA, [[9, 10], [10, 11], [11, 12], [0, 9]], '#22c55e', 'middle');
-                drawCustomConnections(canvasCtx, assignedPanelA, [[13, 14], [14, 15], [15, 16], [0, 13]], '#3b82f6', 'ring');
-                drawCustomConnections(canvasCtx, assignedPanelA, [[17, 18], [18, 19], [19, 20], [0, 17]], '#a855f7', 'pinky');
-                drawHandPoints(canvasCtx, assignedPanelA);
-                leftData.innerHTML = generateHandHTML(assignedPanelA, "Stream Panel A");
+                drawCustomConnections(canvasCtx, assignedPanelA, [[0, 1], [1, 2], [2, 3], [3, 4]], '#f97316', 'thumb', 'panelA');
+                drawCustomConnections(canvasCtx, assignedPanelA, [[0, 5], [5, 6], [6, 7], [7, 8]], '#eab308', 'index', 'panelA');
+                drawCustomConnections(canvasCtx, assignedPanelA, [[9, 10], [10, 11], [11, 12], [0, 9]], '#22c55e', 'middle', 'panelA');
+                drawCustomConnections(canvasCtx, assignedPanelA, [[13, 14], [14, 15], [15, 16], [0, 13]], '#3b82f6', 'ring', 'panelA');
+                drawCustomConnections(canvasCtx, assignedPanelA, [[17, 18], [18, 19], [19, 20], [0, 17]], '#a855f7', 'pinky', 'panelA');
+                drawHandPoints(canvasCtx, assignedPanelA, 'panelA');
+                leftData.innerHTML = generateHandHTML(assignedPanelA, "Stream Panel A", 'panelA');
             } else {
                 leftData.innerHTML = `<div class="hand-header">Stream Panel A</div><div class="status-msg">NO HAND DETECTED</div>`;
             }
 
-            // Render Hand Panel B Skeletons safely matching toggle profiles
+            // Render Stream Panel B Skeletons matching specific toggle row criteria
             if (assignedPanelB) {
-                drawCustomConnections(canvasCtx, assignedPanelB, [[0, 1], [1, 2], [2, 3], [3, 4]], '#f97316', 'thumb');
-                drawCustomConnections(canvasCtx, assignedPanelB, [[0, 5], [5, 6], [6, 7], [7, 8]], '#eab308', 'index');
-                drawCustomConnections(canvasCtx, assignedPanelB, [[9, 10], [10, 11], [11, 12], [0, 9]], '#22c55e', 'middle');
-                drawCustomConnections(canvasCtx, assignedPanelB, [[13, 14], [14, 15], [15, 16], [0, 13]], '#3b82f6', 'ring');
-                drawCustomConnections(canvasCtx, assignedPanelB, [[17, 18], [18, 19], [19, 20], [0, 17]], '#a855f7', 'pinky');
-                drawHandPoints(canvasCtx, assignedPanelB);
-                rightData.innerHTML = generateHandHTML(assignedPanelB, "Stream Panel B");
+                drawCustomConnections(canvasCtx, assignedPanelB, [[0, 1], [1, 2], [2, 3], [3, 4]], '#f97316', 'thumb', 'panelB');
+                drawCustomConnections(canvasCtx, assignedPanelB, [[0, 5], [5, 6], [6, 7], [7, 8]], '#eab308', 'index', 'panelB');
+                drawCustomConnections(canvasCtx, assignedPanelB, [[9, 10], [10, 11], [11, 12], [0, 9]], '#22c55e', 'middle', 'panelB');
+                drawCustomConnections(canvasCtx, assignedPanelB, [[13, 14], [14, 15], [15, 16], [0, 13]], '#3b82f6', 'ring', 'panelB');
+                drawCustomConnections(canvasCtx, assignedPanelB, [[17, 18], [18, 19], [19, 20], [0, 17]], '#a855f7', 'pinky', 'panelB');
+                drawHandPoints(canvasCtx, assignedPanelB, 'panelB');
+                rightData.innerHTML = generateHandHTML(assignedPanelB, "Stream Panel B", 'panelB');
             } else {
                 rightData.innerHTML = `<div class="hand-header">Stream Panel B</div><div class="status-msg">NO HAND DETECTED</div>`;
             }
